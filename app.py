@@ -8,213 +8,176 @@ from pathlib import Path
 
 st.set_page_config(
     page_title="Trade System",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    layout="wide"
 )
 
 # =========================================================
-# CSS PREMIUM
+# CLEAN CSS
 # =========================================================
 
 st.markdown("""
 <style>
 
-/* ===== FUNDO ===== */
+/* Fundo geral */
 
 .stApp {
-    background: #0b1120;
-    color: #f8fafc;
+    background-color: #f5f7fb;
 }
 
-/* ===== CONTAINER ===== */
+/* Container */
 
 .block-container {
     padding-top: 2rem;
     padding-bottom: 2rem;
-    max-width: 96%;
+    max-width: 95%;
 }
 
-/* ===== TITULOS ===== */
+/* Títulos */
 
 h1 {
-    font-size: 52px !important;
-    font-weight: 800 !important;
-    color: white !important;
+    font-size: 42px !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
     margin-bottom: 5px;
 }
 
 h2, h3 {
-    color: white !important;
-    font-weight: 700 !important;
+    color: #111827 !important;
+    font-weight: 600 !important;
 }
 
-/* ===== SUBTITLE ===== */
+/* Subtitulo */
 
 .stCaption {
-    color: #94a3b8 !important;
-    font-size: 15px !important;
+    color: #6b7280 !important;
+    font-size: 14px !important;
 }
 
-/* ===== CARDS ===== */
+/* Cards */
 
 div[data-testid="metric-container"] {
 
-    background: linear-gradient(
-        145deg,
-        #111827,
-        #1e293b
-    );
+    background: white;
 
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid #e5e7eb;
 
-    padding: 28px;
+    padding: 20px;
 
-    border-radius: 22px;
+    border-radius: 14px;
 
     box-shadow:
-        0 10px 30px rgba(0,0,0,0.35);
+        0 1px 3px rgba(0,0,0,0.04);
 
 }
 
-/* ===== LABEL CARD ===== */
+/* Label cards */
 
 div[data-testid="metric-container"] label {
 
-    color: #94a3b8 !important;
+    color: #6b7280 !important;
 
-    font-size: 14px !important;
+    font-size: 13px !important;
 
     font-weight: 500 !important;
 
 }
 
-/* ===== VALOR CARD ===== */
+/* Valores cards */
 
 div[data-testid="metric-container"] div {
 
-    color: white !important;
+    color: #111827 !important;
 
-    font-size: 34px !important;
+    font-size: 30px !important;
 
-    font-weight: 800 !important;
+    font-weight: 700 !important;
 
 }
 
-/* ===== FORM ===== */
+/* Form */
 
 [data-testid="stForm"] {
 
-    background: #111827;
+    background: white;
 
-    padding: 28px;
+    border: 1px solid #e5e7eb;
 
-    border-radius: 22px;
+    border-radius: 14px;
 
-    border: 1px solid rgba(255,255,255,0.05);
+    padding: 24px;
 
 }
 
-/* ===== INPUTS ===== */
+/* Inputs */
 
 .stNumberInput input,
 .stTextInput input {
 
-    background: #0f172a !important;
+    border-radius: 10px !important;
 
-    color: white !important;
-
-    border-radius: 14px !important;
-
-    border: 1px solid rgba(255,255,255,0.06) !important;
-
-    height: 52px;
+    border: 1px solid #d1d5db !important;
 
 }
 
-/* ===== SELECT ===== */
+/* Select */
 
 .stSelectbox div[data-baseweb="select"] {
 
-    background: #0f172a !important;
+    border-radius: 10px !important;
 
-    border-radius: 14px !important;
-
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid #d1d5db;
 
 }
 
-/* ===== BOTÕES ===== */
+/* Botões */
 
 .stButton button,
 .stForm button {
 
-    background: linear-gradient(
-        135deg,
-        #2563eb,
-        #3b82f6
-    ) !important;
+    background: #111827 !important;
 
     color: white !important;
 
     border: none !important;
 
-    border-radius: 14px !important;
+    border-radius: 10px !important;
 
-    height: 52px;
+    height: 44px;
 
-    font-size: 15px !important;
-
-    font-weight: 700 !important;
-
-    width: 100%;
+    font-weight: 600 !important;
 
 }
 
-/* ===== TABELA ===== */
+/* Tabela */
 
 [data-testid="stDataFrame"] {
 
-    border-radius: 22px;
+    border-radius: 14px;
 
     overflow: hidden;
 
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid #e5e7eb;
 
 }
 
-/* ===== SIDEBAR ===== */
+/* Sidebar */
 
 section[data-testid="stSidebar"] {
 
-    background: #0f172a;
+    background: white;
 
 }
 
-/* ===== DIVIDER ===== */
+/* Divider */
 
 hr {
 
-    border-color: rgba(255,255,255,0.06);
+    border-color: #e5e7eb;
 
     margin-top: 2rem;
 
     margin-bottom: 2rem;
 
-}
-
-/* ===== SCROLL ===== */
-
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #0f172a;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #334155;
-    border-radius: 20px;
 }
 
 </style>
@@ -255,7 +218,7 @@ except:
 st.title("Painel Operacional — Trade System")
 
 st.caption(
-    "Mesa operacional de opções • Convexidade • Gestão de risco • Controle estrutural"
+    "Mesa operacional de opções • Gestão estrutural • Controle de risco"
 )
 
 st.divider()
@@ -306,7 +269,7 @@ col4.metric(
 )
 
 # =========================================================
-# FORMULÁRIO
+# NOVA OPERAÇÃO
 # =========================================================
 
 st.divider()
@@ -425,8 +388,6 @@ with st.form("nova_operacao"):
 st.divider()
 
 st.markdown("## Mesa Operacional")
-
-st.markdown("<br>", unsafe_allow_html=True)
 
 if not df.empty:
 
