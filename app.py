@@ -2,98 +2,227 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 
+# =========================================================
+# CONFIG
+# =========================================================
+
 st.set_page_config(
     page_title="Trade System",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
+# =========================================================
+# CSS PREMIUM
+# =========================================================
+
 st.markdown("""
 <style>
 
+/* ===== FUNDO ===== */
+
 .stApp {
-    background-color: #0f1117;
-    color: #f3f4f6;
+    background: #0b1120;
+    color: #f8fafc;
 }
+
+/* ===== CONTAINER ===== */
 
 .block-container {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    max-width: 100%;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 96%;
 }
 
-/* Cards */
+/* ===== TITULOS ===== */
+
+h1 {
+    font-size: 52px !important;
+    font-weight: 800 !important;
+    color: white !important;
+    margin-bottom: 5px;
+}
+
+h2, h3 {
+    color: white !important;
+    font-weight: 700 !important;
+}
+
+/* ===== SUBTITLE ===== */
+
+.stCaption {
+    color: #94a3b8 !important;
+    font-size: 15px !important;
+}
+
+/* ===== CARDS ===== */
+
 div[data-testid="metric-container"] {
-    background: linear-gradient(145deg, #161b22, #1c2330);
-    border: 1px solid #2b3240;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 0 12px rgba(0,0,0,0.25);
+
+    background: linear-gradient(
+        145deg,
+        #111827,
+        #1e293b
+    );
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    padding: 28px;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.35);
+
 }
 
-/* Texto cards */
+/* ===== LABEL CARD ===== */
+
 div[data-testid="metric-container"] label {
-    color: #9ca3af !important;
-    font-size: 14px;
+
+    color: #94a3b8 !important;
+
+    font-size: 14px !important;
+
+    font-weight: 500 !important;
+
 }
 
-/* Títulos */
-h1, h2, h3 {
-    color: #f9fafb;
-    font-weight: 700;
+/* ===== VALOR CARD ===== */
+
+div[data-testid="metric-container"] div {
+
+    color: white !important;
+
+    font-size: 34px !important;
+
+    font-weight: 800 !important;
+
 }
 
-/* Data editor */
-[data-testid="stDataFrame"] {
-    border-radius: 14px;
-    overflow: hidden;
-    border: 1px solid #2a3242;
+/* ===== FORM ===== */
+
+[data-testid="stForm"] {
+
+    background: #111827;
+
+    padding: 28px;
+
+    border-radius: 22px;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
 }
 
-/* Inputs */
+/* ===== INPUTS ===== */
+
 .stNumberInput input,
-.stTextInput input,
+.stTextInput input {
+
+    background: #0f172a !important;
+
+    color: white !important;
+
+    border-radius: 14px !important;
+
+    border: 1px solid rgba(255,255,255,0.06) !important;
+
+    height: 52px;
+
+}
+
+/* ===== SELECT ===== */
+
 .stSelectbox div[data-baseweb="select"] {
-    background-color: #161b22;
-    color: white;
-    border-radius: 10px;
+
+    background: #0f172a !important;
+
+    border-radius: 14px !important;
+
+    border: 1px solid rgba(255,255,255,0.06);
+
 }
 
-/* Botões */
-.stButton button {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    color: white;
-    border-radius: 12px;
-    border: none;
-    padding: 10px 20px;
-    font-weight: 600;
+/* ===== BOTÕES ===== */
+
+.stButton button,
+.stForm button {
+
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    ) !important;
+
+    color: white !important;
+
+    border: none !important;
+
+    border-radius: 14px !important;
+
+    height: 52px;
+
+    font-size: 15px !important;
+
+    font-weight: 700 !important;
+
+    width: 100%;
+
 }
 
-.stButton button:hover {
-    opacity: 0.9;
+/* ===== TABELA ===== */
+
+[data-testid="stDataFrame"] {
+
+    border-radius: 22px;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255,255,255,0.06);
+
 }
 
-/* Sidebar */
+/* ===== SIDEBAR ===== */
+
 section[data-testid="stSidebar"] {
-    background-color: #111827;
+
+    background: #0f172a;
+
 }
 
-/* Scroll */
+/* ===== DIVIDER ===== */
+
+hr {
+
+    border-color: rgba(255,255,255,0.06);
+
+    margin-top: 2rem;
+
+    margin-bottom: 2rem;
+
+}
+
+/* ===== SCROLL ===== */
+
 ::-webkit-scrollbar {
     width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #111827;
+    background: #0f172a;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #374151;
+    background: #334155;
     border-radius: 20px;
 }
 
 </style>
 """, unsafe_allow_html=True)
+
+# =========================================================
+# CSV
+# =========================================================
 
 CSV_FILE = "operacoes.csv"
 
@@ -109,25 +238,47 @@ DEFAULT_COLUMNS = [
 ]
 
 if not Path(CSV_FILE).exists():
-    pd.DataFrame(columns=DEFAULT_COLUMNS).to_csv(CSV_FILE, index=False)
+    pd.DataFrame(columns=DEFAULT_COLUMNS).to_csv(
+        CSV_FILE,
+        index=False
+    )
 
 try:
     df = pd.read_csv(CSV_FILE)
 except:
     df = pd.DataFrame(columns=DEFAULT_COLUMNS)
 
+# =========================================================
+# HEADER
+# =========================================================
+
 st.title("Painel Operacional — Trade System")
-st.caption("Mesa operacional de opções • Convexidade • Gestão de risco • Controle estrutural")
+
+st.caption(
+    "Mesa operacional de opções • Convexidade • Gestão de risco • Controle estrutural"
+)
 
 st.divider()
+
+# =========================================================
+# MÉTRICAS
+# =========================================================
 
 capital_operacional = 20000
 
 if not df.empty:
+
     exposicao = df["custo_montagem"].sum()
-    pl_aberto = (df["valor_atual"] - df["custo_montagem"]).sum()
+
+    pl_aberto = (
+        df["valor_atual"] -
+        df["custo_montagem"]
+    ).sum()
+
     operacoes = len(df)
+
 else:
+
     exposicao = 0
     pl_aberto = 0
     operacoes = 0
@@ -154,9 +305,13 @@ col4.metric(
     operacoes
 )
 
+# =========================================================
+# FORMULÁRIO
+# =========================================================
+
 st.divider()
 
-st.subheader("Nova Operação")
+st.markdown("## Nova Operação")
 
 ativos = [
     "PETR4",
@@ -190,19 +345,51 @@ with st.form("nova_operacao"):
 
     c1, c2, c3, c4 = st.columns(4)
 
-    ativo = c1.selectbox("Ativo", ativos)
-    estrategia = c2.selectbox("Estratégia", estrategias)
-    direcao = c3.selectbox("Direção", ["Alta", "Baixa"])
-    cluster = c4.selectbox("Cluster", clusters)
+    ativo = c1.selectbox(
+        "Ativo",
+        ativos
+    )
+
+    estrategia = c2.selectbox(
+        "Estratégia",
+        estrategias
+    )
+
+    direcao = c3.selectbox(
+        "Direção",
+        ["Alta", "Baixa"]
+    )
+
+    cluster = c4.selectbox(
+        "Cluster",
+        clusters
+    )
 
     c5, c6, c7, c8 = st.columns(4)
 
-    dte = c5.number_input("DTE", value=20)
-    custo = c6.number_input("Custo Montagem", value=0.0)
-    atual = c7.number_input("Valor Atual", value=0.0)
-    alvo = c8.number_input("Alvo", value=2000.0)
+    dte = c5.number_input(
+        "DTE",
+        value=20
+    )
 
-    submitted = st.form_submit_button("Adicionar Operação")
+    custo = c6.number_input(
+        "Custo Montagem",
+        value=0.0
+    )
+
+    atual = c7.number_input(
+        "Valor Atual",
+        value=0.0
+    )
+
+    alvo = c8.number_input(
+        "Alvo",
+        value=2000.0
+    )
+
+    submitted = st.form_submit_button(
+        "Adicionar Operação"
+    )
 
     if submitted:
 
@@ -217,22 +404,42 @@ with st.form("nova_operacao"):
             "alvo": alvo,
         }])
 
-        df = pd.concat([df, new_row], ignore_index=True)
-        df.to_csv(CSV_FILE, index=False)
+        df = pd.concat(
+            [df, new_row],
+            ignore_index=True
+        )
+
+        df.to_csv(
+            CSV_FILE,
+            index=False
+        )
 
         st.success("Operação adicionada.")
+
         st.rerun()
+
+# =========================================================
+# MESA
+# =========================================================
 
 st.divider()
 
-st.subheader("Mesa Operacional")
+st.markdown("## Mesa Operacional")
+
+st.markdown("<br>", unsafe_allow_html=True)
 
 if not df.empty:
 
-    df["pl_rs"] = df["valor_atual"] - df["custo_montagem"]
+    df["pl_rs"] = (
+        df["valor_atual"] -
+        df["custo_montagem"]
+    )
 
     df["pl_percentual"] = (
-        (df["valor_atual"] / df["custo_montagem"].replace(0, 1)) - 1
+        (
+            df["valor_atual"] /
+            df["custo_montagem"].replace(0, 1)
+        ) - 1
     ) * 100
 
     def status(row):
@@ -240,58 +447,97 @@ if not df.empty:
         if row["pl_percentual"] >= 100:
             return "Explosão"
 
-        if row["pl_percentual"] <= -50 or row["dte"] < 10:
+        if (
+            row["pl_percentual"] <= -50
+            or row["dte"] < 10
+        ):
             return "Morta"
 
-        if row["pl_percentual"] <= -20 or row["dte"] < 15:
+        if (
+            row["pl_percentual"] <= -20
+            or row["dte"] < 15
+        ):
             return "Atenção"
 
         return "Válida"
 
-    df["status"] = df.apply(status, axis=1)
+    df["status"] = df.apply(
+        status,
+        axis=1
+    )
 
     edited_df = st.data_editor(
         df,
         use_container_width=True,
         num_rows="dynamic",
         hide_index=True,
+
         column_config={
+
             "pl_rs": st.column_config.NumberColumn(
                 "P/L R$",
                 format="R$ %.2f"
             ),
+
             "pl_percentual": st.column_config.NumberColumn(
                 "P/L %",
                 format="%.2f%%"
             ),
+
         }
     )
 
-    edited_df.to_csv(CSV_FILE, index=False)
+    edited_df.to_csv(
+        CSV_FILE,
+        index=False
+    )
 
     df = edited_df
 
+    # =====================================================
+    # CLUSTERS
+    # =====================================================
+
     st.divider()
 
-    st.subheader("Clusters")
+    st.markdown("## Exposição por Cluster")
 
     cluster_view = (
-        df.groupby(["cluster", "direcao"])
+        df.groupby(
+            ["cluster", "direcao"]
+        )
         .size()
         .unstack(fill_value=0)
     )
 
-    st.dataframe(cluster_view, use_container_width=True)
+    st.dataframe(
+        cluster_view,
+        use_container_width=True
+    )
+
+    # =====================================================
+    # MÉTRICAS
+    # =====================================================
 
     st.divider()
 
-    st.subheader("Métricas")
+    st.markdown("## Métricas")
 
     gains = df[df["pl_rs"] > 0]
+
     losses = df[df["pl_rs"] < 0]
 
-    gain_medio = gains["pl_rs"].mean() if not gains.empty else 0
-    loss_medio = losses["pl_rs"].mean() if not losses.empty else 0
+    gain_medio = (
+        gains["pl_rs"].mean()
+        if not gains.empty
+        else 0
+    )
+
+    loss_medio = (
+        losses["pl_rs"].mean()
+        if not losses.empty
+        else 0
+    )
 
     taxa_acerto = (
         len(gains) / len(df) * 100
@@ -299,10 +545,23 @@ if not df.empty:
 
     m1, m2, m3 = st.columns(3)
 
-    m1.metric("Taxa de Acerto", f"{taxa_acerto:.1f}%")
-    m2.metric("Gain Médio", f"R$ {gain_medio:,.2f}")
-    m3.metric("Loss Médio", f"R$ {loss_medio:,.2f}")
+    m1.metric(
+        "Taxa de Acerto",
+        f"{taxa_acerto:.1f}%"
+    )
+
+    m2.metric(
+        "Gain Médio",
+        f"R$ {gain_medio:,.2f}"
+    )
+
+    m3.metric(
+        "Loss Médio",
+        f"R$ {loss_medio:,.2f}"
+    )
 
 else:
 
-    st.info("Nenhuma operação cadastrada.")
+    st.info(
+        "Nenhuma operação cadastrada."
+    )
