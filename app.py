@@ -109,6 +109,7 @@ with st.form("nova_operacao"):
         st.rerun()
 
 if not df.empty:
+
     df["pl_rs"] = df["valor_atual"] - df["custo_montagem"]
 
     df["pl_percentual"] = (
@@ -129,7 +130,16 @@ if not df.empty:
 
     df["status"] = df.apply(status, axis=1)
 
-    st.dataframe(df, use_container_width=True)
+    edited_df = st.data_editor(
+        df,
+        use_container_width=True,
+        num_rows="dynamic",
+        hide_index=True
+    )
+
+    edited_df.to_csv(CSV_FILE, index=False)
+
+    df = edited_df
 
     st.divider()
 
@@ -141,18 +151,7 @@ if not df.empty:
         .unstack(fill_value=0)
     )
 
-   edited_df = st.data_editor(
-    df,
-    use_container_width=True,
-    num_rows="dynamic",
-    hide_index=True
-)
-
-# Salva automaticamente alterações
-edited_df.to_csv(CSV_FILE, index=False)
-
-# Atualiza dataframe em memória
-df = edited_df
+    st.dataframe(cluster_view, use_container_width=True)
 
     st.divider()
 
