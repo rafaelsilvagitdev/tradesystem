@@ -141,15 +141,18 @@ if not df.empty:
         .unstack(fill_value=0)
     )
 
-    edited_df = st.data_editor(
+   edited_df = st.data_editor(
     df,
     use_container_width=True,
-    num_rows="dynamic"
+    num_rows="dynamic",
+    hide_index=True
 )
 
-if not edited_df.equals(df):
-    edited_df.to_csv(CSV_FILE, index=False)
-    df = edited_df
+# Salva automaticamente alterações
+edited_df.to_csv(CSV_FILE, index=False)
+
+# Atualiza dataframe em memória
+df = edited_df
 
     st.divider()
 
