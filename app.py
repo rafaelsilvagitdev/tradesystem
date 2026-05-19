@@ -141,7 +141,15 @@ if not df.empty:
         .unstack(fill_value=0)
     )
 
-    st.dataframe(cluster_view, use_container_width=True)
+    edited_df = st.data_editor(
+    df,
+    use_container_width=True,
+    num_rows="dynamic"
+)
+
+if not edited_df.equals(df):
+    edited_df.to_csv(CSV_FILE, index=False)
+    df = edited_df
 
     st.divider()
 
